@@ -1,6 +1,6 @@
 from tkinter import *
 from TkinterDnD2 import *
-import os.path, os
+import os
 from functools import partial
 from pynput.keyboard import Key, Listener
 import time
@@ -42,15 +42,15 @@ if __name__ == '__main__':
         i = len(codes)
         print(i)
         codes.append(Entry(root, font=("Times", 20), bg="#212526", fg="white", bd=0))
-        codes[i].place(x=10, y=10 + 50 * i, height=40, width=60)
+        codes[i].place(x=10, y=30 + 50 * i, height=40, width=60)
 
         boxes.append(Entry(root, font=("Courier", 20), bg="#212526", fg="white", bd=0))
-        boxes[i].place(x=85, y=10 + 50 * i, height=40, width=180)
+        boxes[i].place(x=85, y=30 + 50 * i, height=40, width=180)
         boxes[i].drop_target_register(DND_FILES)
         boxes[i].dnd_bind('<<Drop>>', partial(drop, i, boxes[i]))
-        add_button.place(x=Window_width/10*6, y=i*50+60)
-        save_button.place(x=Window_width/6, y=i*50+60)
-        root.geometry(str(Window_width)+"x"+str(50*i+120))
+        add_button.place(x=Window_width/10*6, y=i*50+80)
+        save_button.place(x=Window_width/6, y=i*50+80)
+        root.geometry(str(Window_width)+"x"+str(50*i+130))
 
     def save(codes, names):
         new_names = []
@@ -64,7 +64,6 @@ if __name__ == '__main__':
                     pass
                 if len(codes[index].get()) > 4:
                     tkinter.messagebox.showinfo("Warning", "Please use 4 or less digits in your code")
-                #print(codes, names, path)
                 f.write(codes[index].get()+" "+new_names[index]+" "+new_path[index]+"\n")
         pass
 
@@ -137,7 +136,7 @@ if __name__ == '__main__':
     var = StringVar()
     root.title('Fast pick')
     Window_width = 270
-    Window_high = 45 * len(code) + 100
+    Window_high = 45 * len(code) + 120
     root.geometry(str(Window_width)+"x"+str(Window_high))
     root.configure(background='#363636')
 
@@ -145,12 +144,12 @@ if __name__ == '__main__':
     for i, entry in enumerate(code):
         codes.append(Entry(root, font=("Times", 20), bg="#212526", fg="white", bd=0))
         codes[i].insert(0, code[i])
-        codes[i].place(x=10, y=10 + 50*i, height=40, width=60)
-    # file paths drop places
+        codes[i].place(x=10, y=30 + 50*i, height=40, width=60)
 
+    # file paths drop places
     for i, box in enumerate(name):
         boxes.append(Entry(root, font=("Courier", 20), bg="#212526", fg="white", bd=0))
-        boxes[i].place(x=85, y=10+50*i, height=40, width=180)
+        boxes[i].place(x=85, y=30+50*i, height=40, width=180)
         boxes[i].drop_target_register(DND_FILES)
         boxes[i].dnd_bind('<<Drop>>', partial(drop, i, boxes[i]))
         boxes[i].insert(0, name[i])
@@ -161,7 +160,7 @@ if __name__ == '__main__':
         root, command=partial(create_new_row, boxes, codes), image=pixelVirtual,
         compound="c", text="+", font=("Times", 30), height=40, width=40, bg="#212526", fg="white", bd=0, activebackground='#1b1e1f')
 
-    add_button.place(x=Window_width/10*6, y=len(name)*50+10)
+    add_button.place(x=Window_width/10*6, y=len(name)*50+30)
     add_button.bind("<Enter>", partial(on_enter, add_button))
     add_button.bind("<Leave>", partial(on_leave, add_button))
 
@@ -170,16 +169,20 @@ if __name__ == '__main__':
     #save button
     save_button = Button(root, command=partial(save, codes, boxes), image=pixelVirtual,
         compound="c", text="save", font=("Times", 16), height=40, width=40, bg="#212526", fg="white", bd=0, activebackground='#1b1e1f')
-    save_button.place(x=Window_width / 6, y=len(name) * 50 + 10)
+    save_button.place(x=Window_width / 6, y=len(name) * 50 + 30)
 
     save_button.bind("<Enter>", partial(on_enter, save_button))
     save_button.bind("<Leave>", partial(on_leave, save_button))
 
+    #Top labels
+    code_label = Label(root, font=("Courier", 15), bg="#212526", fg="white", bd=0, text="Code")
+    code_label.place(x=15, y=5)
 
-
+    path_label = Label(root, font=("Courier", 15), bg="#212526", fg="white", bd=0, text="Drop file")
+    path_label.place(x=120, y=5)
 
     # Collect events until released
-    listener = Listener(on_press=on_press,on_release=on_release)
+    listener = Listener(on_press=on_press, on_release=on_release)
 
     listener.start()
 
